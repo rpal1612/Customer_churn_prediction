@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Telecom Churn Prediction - Compare Models{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-balance-scale me-2"></i>Model Comparison</h2>
+    <p class="text-muted">Compare performance metrics between prediction models</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Performance Metrics</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h5 class="text-center mb-4">Accuracy Comparison</h5>
+                            <img src="{{ accuracy_chart }}" class="img-fluid" alt="Accuracy Comparison Chart">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="chart-container">
+                            <h5 class="text-center mb-4">AUC Comparison</h5>
+                            <img src="{{ auc_chart }}" class="img-fluid" alt="AUC Comparison Chart">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-brain me-2"></i>Bayesian Network</h4>
+            </div>
+            <div class="card-body">
+                <div class="metric">
+                    <span>Accuracy:</span>
+                    <span><strong>{{ "%.4f"|format(model_comparison_data.rf.accuracy) }}</strong></span>
+                </div>
+                <div class="metric">
+                    <span>AUC:</span>
+                    <span><strong>{{ "%.4f"|format(model_comparison_data.rf.auc) }}</strong></span>
+                </div>
+
+                <h5 class="mt-4">Strengths:</h5>
+                <ul>
+                    <li>Models conditional dependencies between attributes</li>
+                    <li>Better handling of uncertainty</li>
+                    <li>More interpretable conditional probability structure</li>
+                    <li>Can perform well with limited training data</li>
+                    <li>Explicit representation of causal relationships</li>
+                </ul>
+
+                <h5>Limitations:</h5>
+                <ul>
+                    <li>Requires discretization of continuous variables</li>
+                    <li>May have lower accuracy than ensemble methods</li>
+                    <li>Structure learning can be challenging</li>
+                </ul>
+
+                <div class="alert alert-primary mt-3">
+                    <i class="fas fa-info-circle me-2"></i> Best for scenarios where understanding relationships between
+                    variables is important.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-project-diagram me-2"></i>Markov Model</h4>
+            </div>
+            <div class="card-body">
+                <div class="metric">
+                    <span>Accuracy:</span>
+                    <span><strong>{{ "%.4f"|format(model_data.bn.accuracy) }}</strong></span>
+                </div>
+                <div class="metric">
+                    <span>AUC:</span>
+                    <span><strong>{{ "%.4f"|format(model_data.bn.auc) }}</strong></span>
+                </div>
+
+                <h5 class="mt-4">Strengths:</h5>
+                <ul>
+                    <li>Models sequential transitions between customer states</li>
+                    <li>Efficient computation with simple probability matrices</li>
+                    <li>Captures temporal patterns in customer behavior</li>
+                    <li>Strong at predicting next-state probabilities</li>
+                    <li>Works well for modeling customer journeys and lifecycle stages</li>
+                </ul>
+
+                <h5>Limitations:</h5>
+                <ul>
+                    <li>Limited memory (only considers current state)</li>
+                    <li>Cannot model complex dependencies between non-sequential variables</li>
+                    <li>Less effective with sparse transition data</li>
+                </ul>
+
+                <div class="alert alert-primary mt-3">
+                    <i class="fas fa-info-circle me-2"></i> Best for scenarios where understanding customer journey
+                    progression and state transitions is important.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-star me-2"></i>Recommendation</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-success">
+                    <h5 class="alert-heading">
+                        <i class="fas fa-trophy me-2"></i>
+                        Recommended Model:
+                        {% if model_data.rf.accuracy > model_data.bn.accuracy %}
+                        Bayesian Network
+                        {% else %}
+                        Markov Model
+                        {% endif %}
+                    </h5>
+
+                    <hr>
+
+                    <p>
+                        <strong>Justification:</strong>
+                        {% if model_data.rf.accuracy > model_data.bn.accuracy %}
+                        Bayesian Networks are powerful probabilistic models that represent variables and their
+                        conditional dependencies through a directed acyclic graph. They are highly effective for
+                        reasoning under uncertainty, making predictions with incomplete data, and understanding complex
+                        causal relationships. Their graphical structure enhances interpretability and supports
+                        decision-making in systems where probabilistic interactions are important.
+                        {% endif %}
+                    </p>
+                </div>
+
+                <h5 class="mt-4">Use Case Recommendations:</h5>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">When to use Bayesian Network:</h5>
+                                <ul>
+                                    <li>When understanding variable relationships is a priority</li>
+                                    <li>When you need to explain the model's decisions</li>
+                                    <li>When you have limited training data</li>
+                                    <li>When you want to visualize conditional dependencies</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">When to use Markov Model:</h5>
+                                <ul>
+                                    <li>When analyzing customer journey steps and transitions</li>
+                                    <li>When predicting next actions based on current state</li>
+                                    <li>When modeling sequential decision processes</li>
+                                    <li>When temporal patterns are more important than attribute relationships</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <a href="/predict" class="btn btn-primary">
+                        <i class="fas fa-chart-line me-2"></i>Make a Prediction
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

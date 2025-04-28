@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Telecom Churn Prediction - Results{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-chart-bar me-2"></i>Prediction Results</h2>
+    <p class="text-muted">Analysis using {{ results.model_name }} model</p>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="prediction-result {% if results.prediction == 1 %}prediction-negative{% else %}prediction-positive{% endif %}">
+            <h3 class="text-center mb-0">
+                {% if results.prediction == 1 %}
+                <i class="fas fa-exclamation-triangle me-2"></i> Customer is likely to churn
+                {% else %}
+                <i class="fas fa-check-circle me-2"></i> Customer is likely to remain
+                {% endif %}
+            </h3>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-percentage me-2"></i>Retention Analysis</h4>
+            </div>
+            <div class="card-body">
+                <h5>Retention Probability: {{ results.retention_probability }}%</h5>
+                <div class="progress">
+                    <div class="progress-bar 
+                        {% if results.retention_probability >= 70 %}bg-success
+                        {% elif results.retention_probability >= 40 %}bg-warning
+                        {% else %}bg-danger{% endif %}" 
+                        role="progressbar" 
+                        style="width: {{ results.retention_probability }}%" 
+                        aria-valuenow="{{ results.retention_probability }}" 
+                        aria-valuemin="0" 
+                        aria-valuemax="100">
+                        {{ results.retention_probability }}%
+                    </div>
+                </div>
+                
+                <h5 class="mt-4">Risk Level: 
+                    <span class="
+                        {% if results.risk_level == 'LOW' %}risk-low
+                        {% elif results.risk_level == 'MEDIUM' %}risk-medium
+                        {% else %}risk-high{% endif %}">
+                        {{ results.risk_level }}
+                    </span>
+                </h5>
+                
+                <div class="alert 
+                    {% if results.risk_level == 'LOW' %}alert-success
+                    {% elif results.risk_level == 'MEDIUM' %}alert-warning
+                    {% else %}alert-danger{% endif %} mt-3">
+                    {% if results.risk_level == 'LOW' %}
+                        <i class="fas fa-shield-alt me-2"></i> This customer has a low risk of churning. Regular engagement should be sufficient.
+                    {% elif results.risk_level == 'MEDIUM' %}
+                        <i class="fas fa-exclamation-circle me-2"></i> This customer has a moderate risk of churning. Consider proactive retention strategies.
+                    {% else %}
+                        <i class="fas fa-radiation me-2"></i> This customer has a high risk of churning. Immediate intervention is recommended.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-exclamation-circle me-2"></i>Risk Factors</h4>
+            </div>
+            <div class="card-body">
+                {% if results.risk_factors %}
+                    <p>The following factors contribute most to the churn risk:</p>
+                    <ol class="list-group list-group-numbered">
+                        {% for factor in results.risk_factors %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                {{ factor }}
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No significant risk factors identified.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-lightbulb me-2"></i>Recommendations</h4>
+            </div>
+            <div class="card-body">
+                {% if results.recommendations %}
+                    <p>Based on the analysis, here are personalized recommendations to reduce churn risk:</p>
+                    {% for rec in results.recommendations %}
+                    <div class="recommendation">
+                        <i class="fas fa-check-circle me-2" style="color: var(--primary-color);"></i> {{ rec }}
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i> No specific recommendations available.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="fas fa-brain me-2"></i>{{ results.model_name }} Insights</h4>
+            </div>
+            <div class="card-body">
+                {% if results.model_name == "Bayesian Network" %}
+                    <p>The Bayesian Network Model analyzes conditional dependencies between customer attributes.</p>
+                    <div class="alert alert-primary">
+                        <i class="fas fa-info-circle me-2"></i> This prediction is based on multiple decision paths through your customer data.
+                    </div>
+                    <p>This model typically outperforms the Markov Model due to its ability to:</p>
+                    <ul>
+                        <li>Explicit modeling of relationships between variables</li>
+                        <li>Better handling of uncertainty and missing data</li>
+                        <li>More interpretable conditional probability structure</li>
+                    </ul>
+                {% elif results.model_name == "Markov Model" %}
+                    <p>This prediction evaluates how customer attributes change over time, focusing on transition probabilities.</p>
+                    <div class="alert alert-primary">
+                        <i class="fas fa-info-circle me-2"></i> This prediction represents probabilistic reasoning about churn likelihood.
+                    </div>
+                    <p>While typically less accurate than Bayesian Network, this model offers:</p>
+                    <ul>
+                        <li>Effective modeling of temporal patterns and state transitions</li>
+                        <li>Strong predictive power for sequence-dependent behaviors</li>
+                        <li>Simple, probabilistic framework that's computationally efficient</li>
+                        <li>Ability to identify critical transition points in the customer journey</li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="d-grid gap-2">
+            <a href="/predict" class="btn btn-primary">
+                <i class="fas fa-redo me-2"></i>Make Another Prediction
+            </a>
+            <a href="/compare" class="btn btn-info">
+                <i class="fas fa-chart-bar me-2"></i>Compare Models
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}

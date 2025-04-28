@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Telecom Churn Prediction - Home{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary mb-3">Telecom Churn Prediction</h1>
+    <p class="lead text-muted">Predict customer churn </p>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card">
+            <div class="card-body text-center p-5">
+                {% if models_exist %}
+                    <i class="fas fa-check-circle mb-4" style="font-size: 3rem; color: var(--success-color);"></i>
+                    <h3 class="mb-3">Models are ready!</h3>
+                    <p class="mb-4">The prediction models have been trained and are ready to use.</p>
+                    <div class="d-grid gap-3">
+                        <a href="/predict" class="btn btn-primary btn-lg">Make a Prediction</a>
+                        <a href="/compare" class="btn btn-info btn-lg">Compare Models</a>
+                    </div>
+                {% else %}
+                    <i class="fas fa-exclamation-triangle mb-4" style="font-size: 3rem; color: var(--warning-color);"></i>
+                    <h3 class="mb-3">Models Not Found</h3>
+                    <p class="mb-4">The prediction models need to be trained first. Please run the training script with your dataset.</p>
+                    <div class="alert alert-info">
+                        <p class="mb-0"><strong>How to train models:</strong></p>
+                        <p class="mb-0">Run the following command in your terminal:</p>
+                        <code>python train_models.py</code>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How It Works</h2>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 feature-card">
+            <div class="card-body">
+                <i class="fas fa-brain feature-icon"></i>
+                <h4>Advanced Models</h4>
+                <p>Two powerful machine learning models analyze customer data to predict churn probability.</p>
+                <ul class="text-start">
+                    <li>Bayesian Network</li>
+                    <li>Markov Model</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 feature-card">
+            <div class="card-body">
+                <i class="fas fa-chart-line feature-icon"></i>
+                <h4>Accurate Predictions</h4>
+                <p>Get detailed predictions including:</p>
+                <ul class="text-start">
+                    <li>Churn probability</li>
+                    <li>Risk level assessment</li>
+                    <li>Key risk factors</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 feature-card">
+            <div class="card-body">
+                <i class="fas fa-lightbulb feature-icon"></i>
+                <h4>Smart Recommendations</h4>
+                <p>Receive personalized recommendations to reduce churn risk:</p>
+                <ul class="text-start">
+                    <li>Customer-specific strategies</li>
+                    <li>Targeted retention actions</li>
+                    <li>Risk mitigation approaches</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">About This System</h3>
+            </div>
+            <div class="card-body">
+                <p>This telecom churn prediction system uses advanced machine learning to help you identify customers at risk of leaving your service.</p>
+                
+                <h5 class="mt-4">Key Features:</h5>
+                <ul>
+                    <li><strong>Dual Model Analysis:</strong> Compare predictions from two different machine learning approaches</li>
+                    <li><strong>Risk Factor Identification:</strong> Understand exactly why a customer might leave</li>
+                    <li><strong>Actionable Recommendations:</strong> Get specific strategies to retain at-risk customers</li>
+                    <li><strong>Performance Metrics:</strong> View detailed model performance statistics</li>
+                </ul>
+                
+                <h5 class="mt-4">How to Use:</h5>
+                <ol>
+                    <li>Ensure models are trained using the backend script</li>
+                    <li>Enter customer data in the prediction page</li>
+                    <li>Review the prediction results and recommendations</li>
+                    <li>Compare model performance to understand prediction confidence</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+{% endblock %}
