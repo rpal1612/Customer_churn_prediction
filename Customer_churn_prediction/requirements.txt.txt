@@ -1,0 +1,7 @@
+flask
+pgmpy
+scikit-learn
+pandas
+numpy
+matplotlib
+networkx
