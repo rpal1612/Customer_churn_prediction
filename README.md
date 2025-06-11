@@ -64,7 +64,7 @@ A Machine Learning project that predicts customer churn using Probabilistic Grap
 
 - The Markov model, while useful for state transition analysis, underperformed in comparison due to its simplicity.
 
-
-
+# License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 
